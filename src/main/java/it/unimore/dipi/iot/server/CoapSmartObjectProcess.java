@@ -1,10 +1,11 @@
 package it.unimore.dipi.iot.server;
 
-import it.unimore.dipi.iot.server.resource.TemperatureObservableResource;
 import it.unimore.dipi.iot.server.resource.TemperatureResource;
 import org.eclipse.californium.core.CoapServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.UUID;
 
 /**
  *
@@ -26,16 +27,14 @@ public class CoapSmartObjectProcess extends CoapServer{
 
 		super();
 
-		//Basic Temperature Resource
-		TemperatureResource temperatureResource = new TemperatureResource("temperature-sensor");
+		String deviceId = String.format("dipi:iot:%s", UUID.randomUUID().toString());
 
-		//Basic Observable Temperature Resource
-		TemperatureObservableResource temperatureObservableResource = new TemperatureObservableResource("temperature-sensor-obs");
+		//Create Demo Resources
+		TemperatureResource temperatureResource = new TemperatureResource(deviceId,"temperature");
 
 		logger.info("Defining and adding resurces...");
 
 		//Add resources ....
-		this.add(temperatureObservableResource);
 		this.add(temperatureResource);
 	}
 

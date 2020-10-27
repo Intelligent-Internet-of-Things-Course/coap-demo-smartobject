@@ -4,6 +4,8 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP.Code;
+import org.eclipse.californium.core.coap.MediaTypeRegistry;
+import org.eclipse.californium.core.coap.OptionSet;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.elements.exception.ConnectorException;
 import org.slf4j.Logger;
@@ -24,9 +26,7 @@ public class CoapGetClientProcess {
 
 	private final static Logger logger = LoggerFactory.getLogger(CoapGetClientProcess.class);
 
-	private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/demo";
-
-	//private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/temperature-sensor";
+	private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/temperature";
 
 	public static void main(String[] args) {
 		
@@ -37,15 +37,11 @@ public class CoapGetClientProcess {
 		//"Message ID", "Token" and other header's fields can be set 
 		Request request = new Request(Code.GET);
 
-		//In required it is also possible to set a specific MID
-		//request.setMID(8888);
-
-		//In required it is also possible to set a specific Token
-		//byte[] token = "a".getBytes();
-		//request.setToken(token);
-
 		//Set Request as Confirmable
 		request.setConfirmable(true);
+
+		//Set Options to receive the response as JSON+SenML MediaType
+		request.setOptions(new OptionSet().setAccept(MediaTypeRegistry.APPLICATION_SENML_JSON));
 
 		logger.info("Request Pretty Print: \n{}", Utils.prettyPrint(request));
 
