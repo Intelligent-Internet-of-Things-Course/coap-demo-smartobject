@@ -83,6 +83,8 @@ public class TemperatureResource extends CoapResource {
 			SenMLPack senMLPack = new SenMLPack();
 
 			SenMLRecord senMLRecord = new SenMLRecord();
+			//E.g., dipi:iot:<devide_UUID>:<resource_name>
+			//dipi:iot:b13ab565-ecad-45b7-a555-7ad0b1ef9c46:temperature
 			senMLRecord.setBaseName(String.format("%s:%s", this.deviceId, this.getName()));
 			senMLRecord.setVersion(SENSOR_VERSION);
 			senMLRecord.setUnit(TEMPERATURE_UNIT);
@@ -117,7 +119,7 @@ public class TemperatureResource extends CoapResource {
 		exchange.setMaxAge(RESOURCE_MAX_AGE_SECONDS);
 
 		//If the request specify the MediaType as JSON or JSON+SenML
-		if (exchange.getRequestOptions().getAccept() == MediaTypeRegistry.APPLICATION_SENML_JSON ||
+		if(exchange.getRequestOptions().getAccept() == MediaTypeRegistry.APPLICATION_SENML_JSON ||
 				exchange.getRequestOptions().getAccept() == MediaTypeRegistry.APPLICATION_JSON){
 
 			Optional<String> senmlPayload = getJsonSenmlResponse();

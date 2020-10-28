@@ -23,9 +23,9 @@ import java.util.*;
  * @project coap-demo-smartobject
  * @created 20/10/2020 - 09:19
  */
-public class CoapAutomaticaDataFetcherProcess {
+public class CoapAutomaticDataFetcherProcess {
 
-	private final static Logger logger = LoggerFactory.getLogger(CoapAutomaticaDataFetcherProcess.class);
+	private final static Logger logger = LoggerFactory.getLogger(CoapAutomaticDataFetcherProcess.class);
 
 	private static final String TARGET_SMART_OBJECT_ADDRESS = "127.0.0.1";
 
@@ -101,6 +101,7 @@ public class CoapAutomaticaDataFetcherProcess {
 		//"Message ID", "Token" and other header's fields can be set
 		Request request = new Request(Code.GET);
 
+		//coap://127.0.0.1:5683/.well-known/core
 		request.setURI(String.format("coap://%s:%d%s",
 				TARGET_SMART_OBJECT_ADDRESS,
 				TARGET_SMART_OBJECT_IP,
@@ -138,6 +139,7 @@ public class CoapAutomaticaDataFetcherProcess {
 
 								logger.info("Target resource found ! URI: {}}", link.getURI());
 
+								//E.g. coap://<node_ip>:<node_port>/<resource_uri>
 								String targetResourceUrl = String.format("coap://%s:%d%s",
 										TARGET_SMART_OBJECT_ADDRESS,
 										TARGET_SMART_OBJECT_IP,
