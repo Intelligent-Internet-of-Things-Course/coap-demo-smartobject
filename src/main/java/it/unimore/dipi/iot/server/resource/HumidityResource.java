@@ -12,42 +12,43 @@ import org.eclipse.californium.core.coap.MediaTypeRegistry;
 import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Simple temperature Observable resource represented as int value
+ * Simple Humidity Observable resource represented as int value
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
  * @project coap-demo-smartobject
  * @created 20/10/2020 - 21:54
  */
-public class TemperatureResource extends CoapResource {
+public class HumidityResource extends CoapResource {
 
-	private final static Logger logger = LoggerFactory.getLogger(TemperatureResource.class);
+	private final static Logger logger = LoggerFactory.getLogger(HumidityResource.class);
 
 	private static final Number SENSOR_VERSION = 0.1;
 
-	private static final String OBJECT_TITLE = "TemperatureSensor";
+	private static final String OBJECT_TITLE = "HumiditySensor";
 
-	private static final String RESOURCE_TYPE = "com.iot.demo.sensor.temperature";
+	private static final String RESOURCE_TYPE = "com.iot.demo.sensor.humidity";
 
 	private static final long SENSOR_UPDATE_TIME_MS = 1000;
 
 	private static final int RESOURCE_MAX_AGE_SECONDS = 1;
 
-	private int temperature;
+	private int humidity;
 
 	private String deviceId;
 
 	//Resource Unit according to SenML Units Registry (http://www.iana.org/assignments/senml/senml.xhtml)
-	private String TEMPERATURE_UNIT = "Cel";
+	private String HUMIDITY_UNIT = "%RH";
 
 	private ObjectMapper objectMapper;
 
-	public TemperatureResource(String deviceId, String name) {
+	public HumidityResource(String deviceId, String name) {
 
 		super(name);
 
@@ -85,8 +86,8 @@ public class TemperatureResource extends CoapResource {
 			SenMLRecord senMLRecord = new SenMLRecord();
 			senMLRecord.setBaseName(String.format("%s:%s", this.deviceId, this.getName()));
 			senMLRecord.setVersion(SENSOR_VERSION);
-			senMLRecord.setUnit(TEMPERATURE_UNIT);
-			senMLRecord.setValue(temperature);
+			senMLRecord.setUnit(HUMIDITY_UNIT);
+			senMLRecord.setValue(humidity);
 			senMLRecord.setTime(System.currentTimeMillis());
 
 			senMLPack.add(senMLRecord);
@@ -105,7 +106,7 @@ public class TemperatureResource extends CoapResource {
 		public void run() {
 			// .. periodic update of the resource
 			Random rand = new Random();
-			temperature = (rand.nextInt(30) + 1);
+			humidity = (rand.nextInt(30) + 1);
 			changed(); // notify all observers 
 		}
 	}
@@ -128,7 +129,7 @@ public class TemperatureResource extends CoapResource {
 		}
 		//Otherwise respond with the default textplain payload
 		else
-			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(temperature), MediaTypeRegistry.TEXT_PLAIN);
+			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(humidity), MediaTypeRegistry.TEXT_PLAIN);
 
 	}
 	@Override

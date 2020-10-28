@@ -1,5 +1,7 @@
 package it.unimore.dipi.iot.server;
 
+import it.unimore.dipi.iot.server.resource.HumidityResource;
+import it.unimore.dipi.iot.server.resource.SwitchActuatorResource;
 import it.unimore.dipi.iot.server.resource.TemperatureResource;
 import org.eclipse.californium.core.CoapServer;
 import org.slf4j.Logger;
@@ -11,19 +13,19 @@ import java.util.UUID;
  *
  * Demo Temperature CoAP Smart Object hosting 3 different resources:
  *
- * - basic temperature sensor resource with a random double value
- * - basic observable temperature sensor resource with a random double value (updated every 1 sec)
- * - basic temperature sensor resource with a random double value adapting Content-Type according to Request Accept Option
+ * - observable temperature sensor resource with a random int value (updated every 1 sec)
+ * - observable humidity sensor resource with a random int value (updated every 1 sec)
+ * - observable actuator represented as an int (0 disabled, 1 enabled)
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
  * @project coap-playground
  * @created 20/10/2020 - 21:54
  */
-public class CoapSmartObjectProcess extends CoapServer{
+public class DemoCoapSmartObjectProcess extends CoapServer{
 
-	private final static Logger logger = LoggerFactory.getLogger(CoapSmartObjectProcess.class);
+	private final static Logger logger = LoggerFactory.getLogger(DemoCoapSmartObjectProcess.class);
 
-	public CoapSmartObjectProcess(){
+	public DemoCoapSmartObjectProcess(){
 
 		super();
 
@@ -31,16 +33,21 @@ public class CoapSmartObjectProcess extends CoapServer{
 
 		//Create Demo Resources
 		TemperatureResource temperatureResource = new TemperatureResource(deviceId,"temperature");
+		HumidityResource humidityResource = new HumidityResource(deviceId,"humidity");
+		SwitchActuatorResource switchActuatorResource = new SwitchActuatorResource(deviceId,"switch");
 
-		logger.info("Defining and adding resurces...");
+		logger.info("Defining and adding resources ...");
 
 		//Add resources ....
 		this.add(temperatureResource);
+		this.add(humidityResource);
+		this.add(switchActuatorResource);
+
 	}
 
 	public static void main(String[] args) {
 
-		CoapSmartObjectProcess demoCoapServerProcess = new CoapSmartObjectProcess();
+		DemoCoapSmartObjectProcess demoCoapServerProcess = new DemoCoapSmartObjectProcess();
 
 		logger.info("Starting Coap Server...");
 

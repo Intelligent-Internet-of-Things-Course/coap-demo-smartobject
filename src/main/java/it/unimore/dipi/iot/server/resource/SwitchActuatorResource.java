@@ -6,6 +6,7 @@ import it.unimore.dipi.iot.utils.CoreInterfaces;
 import it.unimore.dipi.iot.utils.SenMLPack;
 import it.unimore.dipi.iot.utils.SenMLRecord;
 import org.eclipse.californium.core.CoapResource;
+import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP;
 import org.eclipse.californium.core.coap.CoAP.Type;
 import org.eclipse.californium.core.coap.MediaTypeRegistry;
@@ -13,41 +14,32 @@ import org.eclipse.californium.core.server.resources.CoapExchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Optional;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
- * Simple temperature Observable resource represented as int value
+ * Simple Switch Demo Actuator represented as an int value
+ * 0 = disabled, 1=enabled
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
  * @project coap-demo-smartobject
  * @created 20/10/2020 - 21:54
  */
-public class TemperatureResource extends CoapResource {
+public class SwitchActuatorResource extends CoapResource {
 
-	private final static Logger logger = LoggerFactory.getLogger(TemperatureResource.class);
+	private final static Logger logger = LoggerFactory.getLogger(SwitchActuatorResource.class);
 
 	private static final Number SENSOR_VERSION = 0.1;
 
-	private static final String OBJECT_TITLE = "TemperatureSensor";
+	private static final String OBJECT_TITLE = "SwitchActuator";
 
-	private static final String RESOURCE_TYPE = "com.iot.demo.sensor.temperature";
+	private static final String RESOURCE_TYPE = "com.iot.demo.sensor.switch";
 
-	private static final long SENSOR_UPDATE_TIME_MS = 1000;
-
-	private static final int RESOURCE_MAX_AGE_SECONDS = 1;
-
-	private int temperature;
+	private int switchStatus;
 
 	private String deviceId;
 
-	//Resource Unit according to SenML Units Registry (http://www.iana.org/assignments/senml/senml.xhtml)
-	private String TEMPERATURE_UNIT = "Cel";
-
 	private ObjectMapper objectMapper;
 
-	public TemperatureResource(String deviceId, String name) {
+	public SwitchActuatorResource(String deviceId, String name) {
 
 		super(name);
 
@@ -65,11 +57,10 @@ public class TemperatureResource extends CoapResource {
 
 		//Specify Resource Attributes
 		getAttributes().addAttribute("rt",RESOURCE_TYPE);
-		getAttributes().addAttribute("if", CoreInterfaces.CORE_S.getValue());
+		getAttributes().addAttribute("if", CoreInterfaces.CORE_A.getValue());
 
-		// schedule a periodic update task, otherwise let events call changed()
-		Timer timer = new Timer();
-		timer.schedule(new UpdateTask(), 0, SENSOR_UPDATE_TIME_MS);
+		// Reset Switch Status Value
+		this.switchStatus = 0;
 	}
 
 	/**
@@ -85,8 +76,7 @@ public class TemperatureResource extends CoapResource {
 			SenMLRecord senMLRecord = new SenMLRecord();
 			senMLRecord.setBaseName(String.format("%s:%s", this.deviceId, this.getName()));
 			senMLRecord.setVersion(SENSOR_VERSION);
-			senMLRecord.setUnit(TEMPERATURE_UNIT);
-			senMLRecord.setValue(temperature);
+			senMLRecord.setBooleanValue(getBooleanSwitchStatus());
 			senMLRecord.setTime(System.currentTimeMillis());
 
 			senMLPack.add(senMLRecord);
@@ -99,21 +89,12 @@ public class TemperatureResource extends CoapResource {
 		}
 	}
 
-	private class UpdateTask extends TimerTask {
-
-		@Override
-		public void run() {
-			// .. periodic update of the resource
-			Random rand = new Random();
-			temperature = (rand.nextInt(30) + 1);
-			changed(); // notify all observers 
-		}
+	private boolean getBooleanSwitchStatus(){
+		return this.switchStatus != 0;
 	}
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
-		// the Max-Age value should match the update interval
-		exchange.setMaxAge(RESOURCE_MAX_AGE_SECONDS);
 
 		//If the request specify the MediaType as JSON or JSON+SenML
 		if (exchange.getRequestOptions().getAccept() == MediaTypeRegistry.APPLICATION_SENML_JSON ||
@@ -128,7 +109,7 @@ public class TemperatureResource extends CoapResource {
 		}
 		//Otherwise respond with the default textplain payload
 		else
-			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(temperature), MediaTypeRegistry.TEXT_PLAIN);
+			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(this.switchStatus), MediaTypeRegistry.TEXT_PLAIN);
 
 	}
 	@Override
@@ -138,8 +119,73 @@ public class TemperatureResource extends CoapResource {
 
 	@Override
 	public void handlePUT(CoapExchange exchange) {
-		super.handlePUT(exchange);
+
+		//According to CoRE Interface a POST request has an empty body and change the current status
+		try{
+
+			logger.info("Request Pretty Print:\n{}", Utils.prettyPrint(exchange.advanced().getRequest()));
+			logger.info("Received PUT Request with body: {}", exchange.getRequestPayload());
+
+			//Empty request
+			if(exchange.getRequestPayload() != null){
+
+				int submittedValue = Integer.parseInt(new String(exchange.getRequestPayload()));
+
+				//If the value is not correct
+				if(submittedValue == 0 || submittedValue == 1){
+
+					//Update internal status
+					this.switchStatus = submittedValue;
+
+					logger.info("Resource Status Updated: {}", this.switchStatus);
+
+					exchange.respond(CoAP.ResponseCode.CHANGED);
+
+					//Notify Observers
+					changed();
+				}
+				else
+					exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
+			}
+			else
+				exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
+
+		}catch (Exception e){
+			logger.error("Error Handling POST -> {}", e.getLocalizedMessage());
+			exchange.respond(CoAP.ResponseCode.INTERNAL_SERVER_ERROR);
+		}
+
 	}
 
-	
+	@Override
+	public void handlePOST(CoapExchange exchange) {
+
+		//According to CoRE Interface a POST request has an empty body and change the current status
+		try{
+
+			logger.info("Request Pretty Print:\n{}", Utils.prettyPrint(exchange.advanced().getRequest()));
+			logger.info("Received POST Request with body: {}", exchange.getRequestPayload());
+
+			//Empty request
+			if(exchange.getRequestPayload() == null){
+
+				//Update internal status
+				this.switchStatus = (switchStatus == 1) ? 0 : 1;
+
+				logger.info("Resource Status Updated: {}", this.switchStatus);
+
+				exchange.respond(CoAP.ResponseCode.CHANGED);
+
+				//Notify Observers
+				changed();
+			}
+			else
+				exchange.respond(CoAP.ResponseCode.BAD_REQUEST);
+
+		}catch (Exception e){
+			logger.error("Error Handling POST -> {}", e.getLocalizedMessage());
+			exchange.respond(CoAP.ResponseCode.INTERNAL_SERVER_ERROR);
+		}
+
+	}
 }

@@ -22,9 +22,9 @@ import java.io.IOException;
  * @project coap-playground
  * @created 20/10/2020 - 09:19
  */
-public class CoapGetClientProcess {
+public class CoapGetSenmlClientProcess {
 
-	private final static Logger logger = LoggerFactory.getLogger(CoapGetClientProcess.class);
+	private final static Logger logger = LoggerFactory.getLogger(CoapGetSenmlClientProcess.class);
 
 	private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/temperature";
 
@@ -39,6 +39,9 @@ public class CoapGetClientProcess {
 
 		//Set Request as Confirmable
 		request.setConfirmable(true);
+
+		//Set Options to receive the response as JSON+SenML MediaType
+		request.setOptions(new OptionSet().setAccept(MediaTypeRegistry.APPLICATION_SENML_JSON));
 
 		logger.info("Request Pretty Print: \n{}", Utils.prettyPrint(request));
 

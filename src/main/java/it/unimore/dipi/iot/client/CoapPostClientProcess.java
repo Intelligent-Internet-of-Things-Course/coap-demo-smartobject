@@ -4,8 +4,6 @@ import org.eclipse.californium.core.CoapClient;
 import org.eclipse.californium.core.CoapResponse;
 import org.eclipse.californium.core.Utils;
 import org.eclipse.californium.core.coap.CoAP.Code;
-import org.eclipse.californium.core.coap.MediaTypeRegistry;
-import org.eclipse.californium.core.coap.OptionSet;
 import org.eclipse.californium.core.coap.Request;
 import org.eclipse.californium.elements.exception.ConnectorException;
 import org.slf4j.Logger;
@@ -16,17 +14,18 @@ import java.io.IOException;
 
 /**
  * A simple CoAP Synchronous Client implemented using Californium Java Library
- * The simple client send a GET request to a target CoAP Resource with some custom request parameters
+ * The simple client send a POST request to a target CoAP Resource with some custom request parameters
+ * and Payload (if necessary)
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
  * @project coap-playground
  * @created 20/10/2020 - 09:19
  */
-public class CoapGetClientProcess {
+public class CoapPostClientProcess {
 
-	private final static Logger logger = LoggerFactory.getLogger(CoapGetClientProcess.class);
+	private final static Logger logger = LoggerFactory.getLogger(CoapPostClientProcess.class);
 
-	private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/temperature";
+	private static final String COAP_ENDPOINT = "coap://127.0.0.1:5683/switch";
 
 	public static void main(String[] args) {
 		
@@ -35,14 +34,14 @@ public class CoapGetClientProcess {
 
 		//Request Class is a generic CoAP message: in this case we want a GET.
 		//"Message ID", "Token" and other header's fields can be set 
-		Request request = new Request(Code.GET);
+		Request request = new Request(Code.POST);
 
 		//Set Request as Confirmable
 		request.setConfirmable(true);
 
-		logger.info("Request Pretty Print: \n{}", Utils.prettyPrint(request));
+		logger.info("Request Pretty Print:\n{}", Utils.prettyPrint(request));
 
-		//Synchronously send the GET message (blocking call)
+		//Synchronously send the POST request (blocking call)
 		CoapResponse coapResp = null;
 
 		try {
