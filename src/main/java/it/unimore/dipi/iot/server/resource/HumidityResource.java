@@ -106,7 +106,7 @@ public class HumidityResource extends CoapResource {
 		public void run() {
 			// .. periodic update of the resource
 			Random rand = new Random();
-			humidity = (rand.nextInt(30) + 1);
+			humidity = (rand.nextInt(100) + 1);
 			changed(); // notify all observers 
 		}
 	}
@@ -132,15 +132,5 @@ public class HumidityResource extends CoapResource {
 			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(humidity), MediaTypeRegistry.TEXT_PLAIN);
 
 	}
-	@Override
-	public void handleDELETE(CoapExchange exchange) {
-		super.handleDELETE(exchange);
-	}
 
-	@Override
-	public void handlePUT(CoapExchange exchange) {
-		super.handlePUT(exchange);
-	}
-
-	
 }

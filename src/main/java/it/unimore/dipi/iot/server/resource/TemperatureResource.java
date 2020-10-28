@@ -64,7 +64,7 @@ public class TemperatureResource extends CoapResource {
 		getAttributes().setObservable(); // mark observable in the Link-Format
 
 		//Specify Resource Attributes
-		getAttributes().addAttribute("rt",RESOURCE_TYPE);
+		getAttributes().addAttribute("rt", RESOURCE_TYPE);
 		getAttributes().addAttribute("if", CoreInterfaces.CORE_S.getValue());
 
 		// schedule a periodic update task, otherwise let events call changed()
@@ -112,6 +112,7 @@ public class TemperatureResource extends CoapResource {
 
 	@Override
 	public void handleGET(CoapExchange exchange) {
+
 		// the Max-Age value should match the update interval
 		exchange.setMaxAge(RESOURCE_MAX_AGE_SECONDS);
 
@@ -131,15 +132,5 @@ public class TemperatureResource extends CoapResource {
 			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(temperature), MediaTypeRegistry.TEXT_PLAIN);
 
 	}
-	@Override
-	public void handleDELETE(CoapExchange exchange) {
-		super.handleDELETE(exchange);
-	}
 
-	@Override
-	public void handlePUT(CoapExchange exchange) {
-		super.handlePUT(exchange);
-	}
-
-	
 }

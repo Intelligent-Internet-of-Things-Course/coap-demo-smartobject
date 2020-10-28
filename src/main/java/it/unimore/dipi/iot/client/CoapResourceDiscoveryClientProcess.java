@@ -17,11 +17,11 @@ import java.util.Set;
 
 
 /**
- * A simple CoAP Synchronous Client implemented using Californium Java Library
- * The simple client send a GET request to a target CoAP Resource with some custom request parameters
+ * A simple CoAP Client implemented using the Java Californium Library sending a GET requesto to
+ * the stardard Resource Discovery endpoint /.well-known/core
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 09:19
  */
 public class CoapResourceDiscoveryClientProcess {
@@ -60,7 +60,7 @@ public class CoapResourceDiscoveryClientProcess {
 
 					Set<WebLink> links = LinkFormat.parse(coapResp.getResponseText());
 
-					links.stream().forEach(link -> {
+					links.forEach(link -> {
 
 						logger.info(String.format("Link: %s", link.getURI()));
 

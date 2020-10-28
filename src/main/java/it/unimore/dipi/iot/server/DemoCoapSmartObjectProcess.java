@@ -18,10 +18,10 @@ import java.util.UUID;
  * - observable actuator represented as an int (0 disabled, 1 enabled)
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 21:54
  */
-public class DemoCoapSmartObjectProcess extends CoapServer{
+public class DemoCoapSmartObjectProcess extends CoapServer {
 
 	private final static Logger logger = LoggerFactory.getLogger(DemoCoapSmartObjectProcess.class);
 

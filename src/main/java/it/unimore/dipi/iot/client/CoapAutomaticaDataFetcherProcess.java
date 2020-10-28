@@ -15,11 +15,12 @@ import java.util.*;
 
 
 /**
- * A simple CoAP Synchronous Client implemented using Californium Java Library
- * The simple client send a GET request to a target CoAP Resource with some custom request parameters
+ * A simple CoAP automatic data fetcher.
+ * Discover available resource on a target CoAP Smart Object and then start observing core.a and core.s available and
+ * observable resources.
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 09:19
  */
 public class CoapAutomaticaDataFetcherProcess {

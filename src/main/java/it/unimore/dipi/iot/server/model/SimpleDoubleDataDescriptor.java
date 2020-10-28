@@ -2,22 +2,22 @@ package it.unimore.dipi.iot.server.model;
 
 /**
  *
- * Demo POJO used to structure a simple Temperature Data Structure
+ * Demo POJO used to structure a simple Double Data Structure
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 21:54
  */
-public class TemperatureDataDescriptor {
+public class SimpleDoubleDataDescriptor {
 
     private long timestamp;
 
     private double value;
 
-    public TemperatureDataDescriptor() {
+    public SimpleDoubleDataDescriptor() {
     }
 
-    public TemperatureDataDescriptor(long timestamp, double value) {
+    public SimpleDoubleDataDescriptor(long timestamp, double value) {
         this.timestamp = timestamp;
         this.value = value;
     }

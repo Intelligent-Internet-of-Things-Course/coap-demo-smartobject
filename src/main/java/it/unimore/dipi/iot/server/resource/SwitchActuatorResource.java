@@ -31,7 +31,7 @@ public class SwitchActuatorResource extends CoapResource {
 
 	private static final String OBJECT_TITLE = "SwitchActuator";
 
-	private static final String RESOURCE_TYPE = "com.iot.demo.sensor.switch";
+	private static final String RESOURCE_TYPE = "com.iot.demo.actuator.switch";
 
 	private int switchStatus;
 
@@ -56,7 +56,7 @@ public class SwitchActuatorResource extends CoapResource {
 		getAttributes().setObservable(); // mark observable in the Link-Format
 
 		//Specify Resource Attributes
-		getAttributes().addAttribute("rt",RESOURCE_TYPE);
+		getAttributes().addAttribute("rt", RESOURCE_TYPE);
 		getAttributes().addAttribute("if", CoreInterfaces.CORE_A.getValue());
 
 		// Reset Switch Status Value
@@ -112,21 +112,16 @@ public class SwitchActuatorResource extends CoapResource {
 			exchange.respond(CoAP.ResponseCode.CONTENT, String.valueOf(this.switchStatus), MediaTypeRegistry.TEXT_PLAIN);
 
 	}
-	@Override
-	public void handleDELETE(CoapExchange exchange) {
-		super.handleDELETE(exchange);
-	}
 
 	@Override
 	public void handlePUT(CoapExchange exchange) {
 
-		//According to CoRE Interface a POST request has an empty body and change the current status
 		try{
 
 			logger.info("Request Pretty Print:\n{}", Utils.prettyPrint(exchange.advanced().getRequest()));
 			logger.info("Received PUT Request with body: {}", exchange.getRequestPayload());
 
-			//Empty request
+			//If the request body is available
 			if(exchange.getRequestPayload() != null){
 
 				int submittedValue = Integer.parseInt(new String(exchange.getRequestPayload()));

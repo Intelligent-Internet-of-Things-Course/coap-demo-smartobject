@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A simple CoAP Synchronous Client implemented using Californium Java Library
- * The client Observe a target resource for 10 Seconds and then cancel the request and ends the execution
+ * The client Observe a target resource for n Seconds and then cancel the request and ends the execution
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 21:54
  */
 public class CoapObservingClientProcess {
@@ -18,8 +18,6 @@ public class CoapObservingClientProcess {
     private final static Logger logger = LoggerFactory.getLogger(CoapObservingClientProcess.class);
 
     public static void main(String[] args) {
-
-        //String targetCoapResourceURL = "coap://localhost:5683/temperature-sensor-obs";
 
         String targetCoapResourceURL = "coap://127.0.0.1:5683/switch";
 
@@ -47,9 +45,9 @@ public class CoapObservingClientProcess {
             }
         });
 
-        // Observes the coap resource for 10 seconds then the observing relation is deleted
+        // Observes the coap resource for 30 seconds then the observing relation is deleted
         try {
-            Thread.sleep(60*10000);
+            Thread.sleep(60*3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -18,7 +18,7 @@ import java.io.IOException;
  * and Payload (if necessary)
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 09:19
  */
 public class CoapPostClientProcess {

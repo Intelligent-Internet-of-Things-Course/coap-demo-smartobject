@@ -16,7 +16,7 @@ import java.io.IOException;
  * and payload
  *
  * @author Marco Picone, Ph.D. - picone.m@gmail.com
- * @project coap-playground
+ * @project coap-demo-smartobject
  * @created 20/10/2020 - 09:19
  */
 public class CoapPutClientProcess {
@@ -35,7 +35,7 @@ public class CoapPutClientProcess {
 		Request request = new Request(Code.PUT);
 
 		//Set PUT request's payload
-		String myPayload = "0";
+		String myPayload = "1";
 		logger.info("PUT Request Random Payload: {}", myPayload);
 		request.setPayload(myPayload);
 
