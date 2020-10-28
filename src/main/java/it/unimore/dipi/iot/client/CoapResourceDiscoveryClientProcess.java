@@ -62,10 +62,10 @@ public class CoapResourceDiscoveryClientProcess {
 
 					links.stream().forEach(link -> {
 
-						System.out.println(String.format("Link: %s", link.getURI()));
+						logger.info(String.format("Link: %s", link.getURI()));
 
 						link.getAttributes().getAttributeKeySet().stream().forEach(attributeKey -> {
-							System.out.println(String.format("Attribute (%s): %s", attributeKey, link.getAttributes().getAttributeValues(attributeKey)));
+							logger.info(String.format("Attribute (%s): %s", attributeKey, link.getAttributes().getAttributeValues(attributeKey)));
 						});
 
 					});
